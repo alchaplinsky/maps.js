@@ -1,12 +1,12 @@
-{
-  "name": "Maps.js",
-  "version": "0.1.0",
-  "description": "Easy and declarative way to use Google Maps API",
-  "main": "maps.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/alchapone/maps.js"
-  },
-  "author": "Alex Chaplinsky",
-  "license": "MIT"
-}
+module.exports = (grunt) ->
+
+  grunt.loadNpmTasks('grunt-contrib-coffee')
+
+  grunt.initConfig
+
+    coffee:
+      compile:
+        files:
+          'maps.js': ['src/google_maps/*.coffee', 'src/map.coffee']
+
+  grunt.registerTask('default', ['coffee:compile'])
