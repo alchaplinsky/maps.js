@@ -1,0 +1,25 @@
+{
+  "name": "Maps.js",
+  "version": "0.1.0",
+  "homepage": "https://github.com/alchapone/maps.js",
+  "authors": [
+    "Alex Chaplinsky <alchaplinsky@gmail.com>"
+  ],
+  "description": "Easy and declarative way to use Google Maps API",
+  "main": "maps.js",
+  "keywords": [
+    "map",
+    "google",
+    "api",
+    "javascript"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "src",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
