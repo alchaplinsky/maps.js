@@ -4,7 +4,7 @@ class GoogleMaps.Api
 
   constructor: ->
     unless window.google && window.google.maps
-      throw new Error "Google Maps API is required. Add this script http://maps.google.com/maps/api/js?sensor=true to a page."
+      console.warn "Google Maps API is required. Add this script http://maps.google.com/maps/api/js?sensor=true to a page."
     else
       @provider = window.google.maps
 

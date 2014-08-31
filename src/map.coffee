@@ -2,8 +2,9 @@ class window.Map
 
   constructor: (@options) ->
     @element = document.querySelector(@options.div)
-    @adapter = new GoogleMaps.Map(@element, @options)
-    @markers = []
+    if @element?
+      @adapter = new GoogleMaps.Map(@element, @options)
+      @markers = []
 
   addMarker: (options) ->
     @markers.push(@adapter.addMarker(options))
