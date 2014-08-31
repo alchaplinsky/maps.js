@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Maps.js - Easy and declarative way to use Google Maps API</title>
+  <link rel="stylesheet" href="/assets/stylesheets/applepie.css">
+  <link rel="stylesheet" href="/assets/stylesheets/layout.css">
+  <script src="/assets/javascripts/maps.js"></script>
+  <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
+</head>
+<body>
+  <div class="wrapper">
+    <header class="header">
+      <a href="/" class="logo">Maps<span>.js</span></a>
+      <ul class="navigation right">
+        <li><a href="/">Getting Started</a></li>
+        <li><a href="#">Documentation</a></li>
+        <li><a href="https://github.com/alchapone/maps.js">GitHub</a></li>
+      </ul>
+    </header>
+    <div class="body by-center">
+      <div class="container">
+        <h1 class="mbm">Easier Way to Work with Google Maps API</h1>
+        <p class="mbl">
+          Maps.js is a Javascript library that gives you easy and declarative way to work with Google Maps Javascript API V3.
+          Creating maps and adding markers is just as easy as passing options object literal to a constructor function.
+        </p>
+        <div class="mbl">
+          <img src="assets/images/location.png" alt="">
+        </div>
+        <a href="https://github.com/alchapone/maps.js/archive/0.1.0.zip" class="button">Download v0.1.0</a>
+        <a href="https://github.com/alchapone/maps.js" class="button" target="_blank">View on GitHub</a>
+        <br><br>
+      </div>
+      <div class="light">
+        <div class="container">
+          <h1  class="mbm">Getting Started</h1>
+          <p>1. Simply add Google Maps script to your page:</p>
+          <div class="mbl">
+            <code>
+              &lt;script src="http://maps.google.com/maps/api/js?sensor=true"&gt;&lt;/script&gt;
+            </code>
+          </div>
+          <br>
+          <p>2. Add a container for map with fixed height to your HTML:</p>
+          <div class="mbl">
+            <code>
+              &lt;div id="worldmap" style="height: 500px;"&gt;&lt;/div&gt;
+            </code>
+          </div>
+          <br>
+          <p>3. Create a new instance of Map object with parameters:</p>
+          <div class="mbl">
+            <code>
+              map = new Map({
+                div: '#worldmap',
+                lat: 20,
+                lng: 20
+              });
+            </code>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <h1 class="mbm">Have Fun with Google Maps!</h1>
+        <div class="map-wrapper">
+          <div class="map-sample"></div>
+        </div>
+        <br/>
+      </div>
+    </div>
+  </div>
+  <footer class="footer">
+    <div class="container">
+      MIT License. &copy; Alex Chaplinsky.
+      GitHub: <a href="http://github.com/alchapone" target="_blank">http://github.com/alchapone</a>,
+      Twitter: <a href="https://twitter.com" target="_blank">@ac1ahpone</a>
+    </div>
+  </footer>
+  <script>
+    window.onload = init;
+    function init(){
+      map = new Map({
+        div: '.map-sample',
+        lat: 20,
+        lng: 20,
+        zoom: 2,
+        minZoom: 2,
+        markers: [{lat: 35.938057,lng: 14.349698, info: { content: '<p>Somewhere in Mediterranean Sea...</p>'}}],
+        controls: { mapType: false, streetView: false, scroll: false}
+      });
+    }
+  </script>
+</body>
+</html>
