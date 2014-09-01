@@ -4,7 +4,7 @@
   GoogleMaps.Api = (function() {
     function Api() {
       if (!(window.google && window.google.maps)) {
-        throw new Error("Google Maps API is required. Add this script http://maps.google.com/maps/api/js?sensor=true to a page.");
+        console.warn("Google Maps API is required. Add this script http://maps.google.com/maps/api/js?sensor=true to a page.");
       } else {
         this.provider = window.google.maps;
       }
@@ -231,8 +231,10 @@
     function Map(options) {
       this.options = options;
       this.element = document.querySelector(this.options.div);
-      this.adapter = new GoogleMaps.Map(this.element, this.options);
-      this.markers = [];
+      if (this.element != null) {
+        this.adapter = new GoogleMaps.Map(this.element, this.options);
+        this.markers = [];
+      }
     }
 
     Map.prototype.addMarker = function(options) {
