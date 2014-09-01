@@ -1,11 +1,30 @@
 class GoogleMaps.Map
 
+  mapOptions: [
+    'backgroundColor'
+    'disableDefaultUI'
+    'disableDoubleClickZoom'
+    'draggable'
+    'draggableCursor'
+    'draggingCursor'
+    'heading'
+    'keyboardShortcuts'
+    'mapMaker'
+    'maxZoom'
+    'minZoom'
+    'noClear'
+    'scrollwheel'
+    'tilt'
+  ]
+
   constructor: (@element, params) ->
     @api =  new GoogleMaps.Api()
     options = {}
     options.zoom = params?.zoom || 1
     options.mapTypeId = @api.mapType(params.type) if params.type
     options = @setControls(options, params)
+    for option in @mapOptions
+      options[option] = params[option] if params[option]
     if params.geo
       @createByGeocode(options, params)
     else
@@ -17,9 +36,9 @@ class GoogleMaps.Map
       @createMap(options)
       @fitBounds(results[0].geometry.viewport)
       @addMarker(marker) for marker in params.markers if params.markers
-      params['onGeoSuccess']() if params.onGeoSuccess?
+      params.onGeoSuccess?.call(@)
     , ->
-      params['onGeoFail']() if params.onGeoFail?
+      params.onGeoFail?.call(@)
 
   createByLatLng: (options, params) ->
     lat = params?.lat || 0
