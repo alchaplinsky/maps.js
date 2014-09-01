@@ -4,7 +4,7 @@
   GoogleMaps.Api = (function() {
     function Api() {
       if (!(window.google && window.google.maps)) {
-        throw new Error("Google Maps API is required. Add this script http://maps.google.com/maps/api/js?sensor=true to a page.");
+        console.warn("Google Maps API is required. Add this script http://maps.google.com/maps/api/js?sensor=true to a page.");
       } else {
         this.provider = window.google.maps;
       }
@@ -16,6 +16,10 @@
 
     Api.prototype.latLng = function(lat, lng) {
       return new this.provider.LatLng(lat, lng);
+    };
+
+    Api.prototype.geocodeStatusOk = function() {
+      return this.provider.GeocoderStatus.OK;
     };
 
     Api.prototype.mapTypeIds = function(types) {
@@ -55,8 +59,10 @@
 
 (function() {
   GoogleMaps.Map = (function() {
+    Map.prototype.mapOptions = ['backgroundColor', 'disableDefaultUI', 'disableDoubleClickZoom', 'draggable', 'draggableCursor', 'draggingCursor', 'heading', 'keyboardShortcuts', 'mapMaker', 'maxZoom', 'minZoom', 'noClear', 'scrollwheel', 'tilt'];
+
     function Map(element, params) {
-      var options;
+      var option, options, _i, _len, _ref;
       this.element = element;
       this.api = new GoogleMaps.Api();
       options = {};
@@ -65,6 +71,13 @@
         options.mapTypeId = this.api.mapType(params.type);
       }
       options = this.setControls(options, params);
+      _ref = this.mapOptions;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        option = _ref[_i];
+        if (params[option]) {
+          options[option] = params[option];
+        }
+      }
       if (params.geo) {
         this.createByGeocode(options, params);
       } else {
@@ -75,33 +88,44 @@
     Map.prototype.createByGeocode = function(options, params) {
       return this.geocode(params.geo, (function(_this) {
         return function(results) {
+          var marker, _i, _len, _ref, _ref1;
           options.center = results[0].geometry.location;
-          _this.createMap(options, params.markers);
-          return _this.fitBounds(results[0].geometry.viewport);
+          _this.createMap(options);
+          _this.fitBounds(results[0].geometry.viewport);
+          if (params.markers) {
+            _ref = params.markers;
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              marker = _ref[_i];
+              _this.addMarker(marker);
+            }
+          }
+          return (_ref1 = params.onGeoSuccess) != null ? _ref1.call(_this) : void 0;
         };
-      })(this));
+      })(this), function() {
+        var _ref;
+        return (_ref = params.onGeoFail) != null ? _ref.call(this) : void 0;
+      });
     };
 
     Map.prototype.createByLatLng = function(options, params) {
-      var lat, lng;
+      var lat, lng, marker, _i, _len, _ref, _results;
       lat = (params != null ? params.lat : void 0) || 0;
       lng = (params != null ? params.lng : void 0) || 0;
       options.center = this.api.latLng(lat, lng);
-      return this.createMap(options, params.markers);
+      this.createMap(options);
+      if (params.markers) {
+        _ref = params.markers;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          marker = _ref[_i];
+          _results.push(this.addMarker(marker));
+        }
+        return _results;
+      }
     };
 
-    Map.prototype.createMap = function(options, markers) {
-      var marker, _i, _len, _results;
-      if (markers == null) {
-        markers = [];
-      }
-      this.map = new this.api.provider.Map(this.element, options);
-      _results = [];
-      for (_i = 0, _len = markers.length; _i < _len; _i++) {
-        marker = markers[_i];
-        _results.push(this.addMarker(marker));
-      }
-      return _results;
+    Map.prototype.createMap = function(options) {
+      return this.map = new this.api.provider.Map(this.element, options);
     };
 
     Map.prototype.setControls = function(options, params) {
@@ -162,16 +186,17 @@
       return this.map.fitBounds(bounds);
     };
 
-    Map.prototype.geocode = function(name, callback) {
+    Map.prototype.geocode = function(name, success, fail) {
       this.geocoder = new this.api.provider.Geocoder();
       return this.geocoder.geocode({
         address: name
       }, (function(_this) {
         return function(results, status) {
-          if (status === _this.api.provider.GeocoderStatus.OK) {
-            return callback(results);
+          if (status === _this.api.geocodeStatusOk()) {
+            return success(results);
           } else {
-            return console.warn("Geocode was not successful for the following reason: " + status);
+            console.warn("Geocode was not successful for the following reason: " + status);
+            return fail();
           }
         };
       })(this));
@@ -231,8 +256,10 @@
     function Map(options) {
       this.options = options;
       this.element = document.querySelector(this.options.div);
-      this.adapter = new GoogleMaps.Map(this.element, this.options);
-      this.markers = [];
+      if (this.element != null) {
+        this.adapter = new GoogleMaps.Map(this.element, this.options);
+        this.markers = [];
+      }
     }
 
     Map.prototype.addMarker = function(options) {
