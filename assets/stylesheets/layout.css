@@ -16,11 +16,11 @@ body {
 header.header {
   background: #fff;
   box-shadow: 0 0 2px 0 rgba(0,0,0,0.2);
-  padding: 5px 40px;
+  padding: 0px 40px 4px 40px;
 }
 .logo {
   color: #f1b940;
-  font-size: 36px;
+  font-size: 42px;
 }
 .logo:hover {
   color: #f6c815;
@@ -31,7 +31,7 @@ header.header {
 }
 
 .navigation li a {
-  padding: 18px 20px 10px 20px;
+  padding: 25px 20px 17px 20px;
 }
 .container {
   padding: 30px 20px;
@@ -49,6 +49,7 @@ header.header {
   border-bottom: 1px solid #eee;
 }
 footer.footer {
+  text-align: center;
   height: 82px;
   background: #fff;
   border-top: 1px solid #eee;
