@@ -13,7 +13,7 @@ module.exports = (grunt) ->
           'development/maps.js': ['src/google_maps/*.coffee', 'src/map.coffee']
     watch:
       coffee:
-        files: ['src{,*/}*.coffee']
+        files: ['src/**/*.coffee']
         tasks: ['coffee:dist']
       livereload:
         options:

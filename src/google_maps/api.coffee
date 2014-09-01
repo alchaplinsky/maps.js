@@ -14,6 +14,9 @@ class GoogleMaps.Api
   latLng: (lat, lng) ->
     new @provider.LatLng(lat, lng)
 
+  geocodeStatusOk: ->
+    @provider.GeocoderStatus.OK
+
   mapTypeIds: (types) ->
     ids = []
     ids.push(@mapType(type)) for type in types

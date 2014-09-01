@@ -14,18 +14,22 @@ class GoogleMaps.Map
   createByGeocode: (options, params) ->
     @geocode params.geo, (results) =>
       options.center = results[0].geometry.location
-      @createMap(options, params.markers)
+      @createMap(options)
       @fitBounds(results[0].geometry.viewport)
+      @addMarker(marker) for marker in params.markers if params.markers
+      params['onGeoSuccess']() if params.onGeoSuccess?
+    , ->
+      params['onGeoFail']() if params.onGeoFail?
 
   createByLatLng: (options, params) ->
     lat = params?.lat || 0
     lng = params?.lng || 0
     options.center = @api.latLng(lat, lng)
-    @createMap(options, params.markers)
+    @createMap(options)
+    @addMarker(marker) for marker in params.markers if params.markers
 
-  createMap: (options, markers = []) ->
+  createMap: (options) ->
     @map = new @api.provider.Map @element, options
-    @addMarker(marker) for marker in markers
 
   setControls: (options, params) ->
     for control, settings of params.controls
@@ -63,10 +67,11 @@ class GoogleMaps.Map
   fitBounds: (bounds) ->
     @map.fitBounds(bounds)
 
-  geocode: (name, callback) ->
+  geocode: (name, success, fail) ->
     @geocoder = new @api.provider.Geocoder()
     @geocoder.geocode address: name, (results, status) =>
-      if status is @api.provider.GeocoderStatus.OK
-        callback(results)
+      if status is @api.geocodeStatusOk()
+        success(results)
       else
         console.warn "Geocode was not successful for the following reason: #{status}"
+        fail()
